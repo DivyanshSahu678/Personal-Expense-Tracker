@@ -38,3 +38,19 @@ class ExpenseService:
 
         finally:
             conn.close()
+            
+    def search_by_category(self, category):
+        conn = get_connection()
+
+        try:
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                SELECT * FROM expenses
+                WHERE LOWER(category) = LOWER(?)
+            """, (category,))
+
+            return cursor.fetchall()
+
+        finally:
+            conn.close()

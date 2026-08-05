@@ -44,7 +44,8 @@ def menu():
 
         print("1. Add Expense")
         print("2. View Expenses")
-        print("3. Exit")
+        print("3. Search by Category")
+        print("4. Exit")
 
         choice = input("\nEnter Choice : ")
 
@@ -55,6 +56,9 @@ def menu():
             view_expenses()
 
         elif choice == "3":
+            search_expenses()
+
+        elif choice == "4":
             print("\nThank You ❤️")
             break
 
@@ -69,11 +73,15 @@ def view_expenses():
         console.print("\n[red]No expenses found![/red]")
         return
 
-    table = Table(title="All Expenses")
+    display_table(expenses, "All Expenses")
+    
+def display_table(expenses, title="Expenses"):
 
-    table.add_column("ID", style="cyan")
+    table = Table(title=title)
+
+    table.add_column("ID", style="cyan", justify="center")
     table.add_column("Title", style="green")
-    table.add_column("Amount", style="yellow")
+    table.add_column("Amount", style="yellow", justify="right")
     table.add_column("Category", style="magenta")
     table.add_column("Date", style="blue")
 
@@ -81,12 +89,24 @@ def view_expenses():
         table.add_row(
             str(expense[0]),
             expense[1],
-            f"₹{expense[2]}",
+            f"₹{expense[2]:.2f}",
             expense[3],
             expense[4]
         )
 
     console.print(table)
+    
+def search_expenses():
+
+    category = input("\nEnter Category : ").strip()
+
+    expenses = service.search_by_category(category)
+
+    if not expenses:
+        console.print(f"\n[red]No expenses found in '{category}' category.[/red]")
+        return
+
+    display_table(expenses, f"Category: {category}")
 
 create_table()
 print("Database Created")
