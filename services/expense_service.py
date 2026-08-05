@@ -92,5 +92,26 @@ class ExpenseService:
             return cursor.rowcount
 
         finally:
-            conn.close()    
+            conn.close() 
             
+    def get_monthly_summary(self):
+        conn = get_connection()
+
+        try:
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                SELECT
+                    substr(date, 1, 7) AS month,
+                    COUNT(*) AS total_transactions,
+                    SUM(amount) AS total_amount
+                FROM expenses
+                GROUP BY month
+                ORDER BY month
+            """)
+
+            return cursor.fetchall()
+
+        finally:
+            conn.close()   
+                

@@ -47,8 +47,9 @@ def menu():
         print("2. View Expenses")
         print("3. Search by Category")
         print("4. Expense Summary")
-        print("5. Delete Expense")
-        print("6. Exit")
+        print("5. Monthly Summary")
+        print("6. Delete Expense")
+        print("7. Exit")
 
         choice = input("\nEnter Choice : ")
 
@@ -63,11 +64,14 @@ def menu():
 
         elif choice == "4":
             show_summary()
-
+            
         elif choice == "5":
-            delete_expense()
+            monthly_summary()
 
         elif choice == "6":
+            delete_expense()
+
+        elif choice == "7":
             print("\nThank You ❤️")
             break
 
@@ -165,6 +169,29 @@ def delete_expense():
 
     except ValueError:
         console.print("\n[red]Please enter a valid numeric ID.[/red]")
+        
+def monthly_summary():
+
+    summary = service.get_monthly_summary()
+
+    if not summary:
+        console.print("\n[red]No expenses found![/red]")
+        return
+
+    table = Table(title="Monthly Expense Summary")
+
+    table.add_column("Month", style="cyan")
+    table.add_column("Transactions", style="green", justify="center")
+    table.add_column("Total Amount", style="yellow", justify="right")
+
+    for row in summary:
+        table.add_row(
+            row[0],
+            str(row[1]),
+            f"₹{row[2]:.2f}"
+        )
+
+    console.print(table)
 
 create_table()
 print("Database Created")
