@@ -74,5 +74,23 @@ class ExpenseService:
             return cursor.fetchone()
 
         finally:
+            conn.close()
+            
+    def delete_expense(self, expense_id):
+        conn = get_connection()
+
+        try:
+            cursor = conn.cursor()
+
+            cursor.execute(
+                "DELETE FROM expenses WHERE id = ?",
+                (expense_id,)
+            )
+
+            conn.commit()
+
+            return cursor.rowcount
+
+        finally:
             conn.close()    
             

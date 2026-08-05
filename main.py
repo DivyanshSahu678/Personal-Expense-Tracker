@@ -47,7 +47,8 @@ def menu():
         print("2. View Expenses")
         print("3. Search by Category")
         print("4. Expense Summary")
-        print("5. Exit")
+        print("5. Delete Expense")
+        print("6. Exit")
 
         choice = input("\nEnter Choice : ")
 
@@ -64,6 +65,9 @@ def menu():
             show_summary()
 
         elif choice == "5":
+            delete_expense()
+
+        elif choice == "6":
             print("\nThank You ❤️")
             break
 
@@ -138,6 +142,29 @@ def show_summary():
             border_style="green"
         )
     )
+    
+def delete_expense():
+
+    expenses = service.get_all_expenses()
+
+    if not expenses:
+        console.print("\n[red]No expenses available to delete.[/red]")
+        return
+
+    display_table(expenses, "Select Expense to Delete")
+
+    try:
+        expense_id = int(input("\nEnter Expense ID to delete: "))
+
+        deleted = service.delete_expense(expense_id)
+
+        if deleted:
+            console.print("\n[green]✅ Expense deleted successfully![/green]")
+        else:
+            console.print("\n[red]❌ Invalid Expense ID.[/red]")
+
+    except ValueError:
+        console.print("\n[red]Please enter a valid numeric ID.[/red]")
 
 create_table()
 print("Database Created")
