@@ -16,13 +16,30 @@ def add_expense():
 
     print("\n------ Add Expense ------")
 
-    title = input("Enter Title : ")
+    title = input("Enter Title : ").strip()
 
-    amount = float(input("Enter Amount : "))
+    if not title:
+        console.print("[red]Title cannot be empty![/red]")
+        return
 
-    category = input("Enter Category : ")
+    try:
+        amount = float(input("Enter Amount : "))
 
-    date = input("Enter Date (YYYY-MM-DD): ")
+        if amount <= 0:
+            console.print("[red]Amount must be greater than 0![/red]")
+            return
+
+    except ValueError:
+        console.print("[red]Please enter a valid amount![/red]")
+        return
+
+    category = input("Enter Category : ").strip()
+
+    if not category:
+        console.print("[red]Category cannot be empty![/red]")
+        return
+
+    date = input("Enter Date (YYYY-MM-DD) [Press Enter for Today]: ").strip()
 
     if date == "":
         date = datetime.today().strftime("%Y-%m-%d")
@@ -158,18 +175,11 @@ def delete_expense():
     display_table(expenses, "Select Expense to Delete")
 
     try:
-        expense_id = int(input("\nEnter Expense ID to delete: "))
-
-        deleted = service.delete_expense(expense_id)
-
-        if deleted:
-            console.print("\n[green]✅ Expense deleted successfully![/green]")
-        else:
-            console.print("\n[red]❌ Invalid Expense ID.[/red]")
+            expense_id = int(input("\nEnter Expense ID: "))
 
     except ValueError:
-        console.print("\n[red]Please enter a valid numeric ID.[/red]")
-        
+        console.print("[red]Please enter a valid ID.[/red]")
+        return
 def monthly_summary():
 
     summary = service.get_monthly_summary()
