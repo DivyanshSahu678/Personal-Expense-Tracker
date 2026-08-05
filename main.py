@@ -1,6 +1,7 @@
 from rich.console import Console
 from rich.table import Table
 from datetime import datetime
+from rich.panel import Panel
 
 from models.expense import Expense
 from services.expense_service import ExpenseService
@@ -45,7 +46,8 @@ def menu():
         print("1. Add Expense")
         print("2. View Expenses")
         print("3. Search by Category")
-        print("4. Exit")
+        print("4. Expense Summary")
+        print("5. Exit")
 
         choice = input("\nEnter Choice : ")
 
@@ -59,6 +61,9 @@ def menu():
             search_expenses()
 
         elif choice == "4":
+            show_summary()
+
+        elif choice == "5":
             print("\nThank You ❤️")
             break
 
@@ -107,6 +112,32 @@ def search_expenses():
         return
 
     display_table(expenses, f"Category: {category}")
+    
+def show_summary():
+
+    summary = service.get_expense_summary()
+
+    total_transactions = summary[0]
+    total_amount = summary[1]
+    average = summary[2]
+    highest = summary[3]
+    lowest = summary[4]
+
+    console.print(
+        Panel.fit(
+            f"""
+[bold cyan]Expense Summary[/bold cyan]
+
+💰 Total Expenses      : ₹{total_amount:.2f}
+🧾 Total Transactions : {total_transactions}
+📊 Average Expense    : ₹{average:.2f}
+📈 Highest Expense    : ₹{highest:.2f}
+📉 Lowest Expense     : ₹{lowest:.2f}
+""",
+            title="Summary",
+            border_style="green"
+        )
+    )
 
 create_table()
 print("Database Created")

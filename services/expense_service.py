@@ -54,3 +54,25 @@ class ExpenseService:
 
         finally:
             conn.close()
+            
+    def get_expense_summary(self):
+        conn = get_connection()
+
+        try:
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                SELECT
+                    COUNT(*),
+                    COALESCE(SUM(amount), 0),
+                    COALESCE(AVG(amount), 0),
+                    COALESCE(MAX(amount), 0),
+                    COALESCE(MIN(amount), 0)
+                FROM expenses
+            """)
+
+            return cursor.fetchone()
+
+        finally:
+            conn.close()    
+            
